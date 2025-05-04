@@ -175,24 +175,24 @@
       <div class="word-box"><div class="jp">おちゃ を ください</div><div class="romaji">O cha o ku da sa i</div><div class="en">Please give me tea</div></div>
     </div>
 
-    <!-- Flashcards -->
-    <div id="flashcards" class="section">
-      <h2>🧠 Flashcards</h2>
-      <div class="flashcard card" onclick="flipCard()">
-        <div class="card-inner" id="cardInner">
-          <div class="card-front">
-            <div class="jp" id="flashJP">?</div>
-          </div>
-          <div class="card-back">
-            <div class="romaji" id="flashRomaji">Romaji</div>
-            <div class="en" id="flashEN">Meaning</div>
-          </div>
+   <!-- Flashcards -->
+<div id="flashcards" class="section">
+    <h2>🧠 Flashcards</h2>
+    <div class="flashcard card" onclick="flipCard()">
+      <div class="card-inner" id="cardInner">
+        <div class="card-front">
+          <div class="jp" id="flashJP">?</div>
+        </div>
+        <div class="card-back">
+          <div class="romaji" id="flashRomaji">Romaji</div>
+          <div class="en" id="flashEN">Meaning</div>
         </div>
       </div>
-      <button onclick="nextCard()">Next</button>
     </div>
-
-  </div>
+  
+    <!-- Move this here -->
+    <button onclick="nextCard()">Next</button>
+  </div>  
 
   <!-- Taskbar -->
   <div class="taskbar">
@@ -213,9 +213,9 @@
       { jp: "これは すし です", romaji: "Ko re wa su shi de su", en: "This is sushi" },
       { jp: "おちゃ を ください", romaji: "O cha o ku da sa i", en: "Please give me tea" }
     ];
-
+  
     let current = 0;
-
+  
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => {
         s.classList.remove('visible');
@@ -228,7 +228,7 @@
       }, 300);
       document.querySelector('.card')?.classList.remove('flipped');
     }
-
+  
     function nextCard() {
       const c = cards[current];
       document.getElementById('flashJP').innerText = c.jp;
@@ -237,15 +237,22 @@
       current = (current + 1) % cards.length;
       document.querySelector('.card')?.classList.remove('flipped');
     }
-
+  
     function flipCard() {
       document.querySelector('.card')?.classList.toggle('flipped');
+      const text = document.getElementById('flashJP').innerText;
+      speakJapanese(text);
     }
-
+  
+    function speakJapanese(text) {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'ja-JP';
+      speechSynthesis.speak(utter);
+    }
+  
     // Load first flashcard
     document.getElementById('flashcards').addEventListener('click', () => {
       if (document.getElementById('flashJP').innerText === "?") nextCard();
     });
   </script>
-</body>
-</html>
+  
