@@ -2,11 +2,104 @@
 <html>
 <head>
   <title>Japanese Helper</title>
-  <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
+    }
+    .section {
+      display: none;
+    }
+    .visible {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <h1>こんにちは (Hello)!</h1>
-  <p>This is your Japanese practice app.</p>
+  <h1>🈶 Japanese Helper</h1>
+
+  <!-- Home Screen -->
+  <div id="home" class="visible">
+    <p>Choose your learning stage:</p>
+    <button onclick="showSection('stage1')">Stage 1: Basic Words</button>
+    <button onclick="showSection('stage2')">Stage 2: Greetings</button>
+    <button onclick="showSection('stage3')">Stage 3: Daily Phrases</button>
+    <button onclick="showSection('quiz')">Stage 4: Quiz Me!</button>
+  </div>
+
+  <!-- Stage 1: Basic Words -->
+  <div id="stage1" class="section">
+    <h2>🍣 Stage 1: Basic Words</h2>
+    <p>Click a button to learn a word:</p>
+    <button onclick="learn('お茶', 'ocha', 'Tea')">Tea (お茶)</button>
+    <button onclick="learn('すし', 'sushi', 'Sushi')">Sushi (すし)</button>
+    <button onclick="learn('です', 'desu', 'is / it is')">Desu (です)</button>
+    <p id="result1"></p>
+    <button onclick="goHome()">🔙 Back</button>
+  </div>
+
+  <!-- Stage 2: Greetings -->
+  <div id="stage2" class="section">
+    <h2>🙋 Stage 2: Greetings</h2>
+    <button onclick="learn('こんにちは', 'konnichiwa', 'Hello')">Hello (こんにちは)</button>
+    <button onclick="learn('さようなら', 'sayounara', 'Goodbye')">Goodbye (さようなら)</button>
+    <p id="result2"></p>
+    <button onclick="goHome()">🔙 Back</button>
+  </div>
+
+  <!-- Stage 3: Daily Phrases -->
+  <div id="stage3" class="section">
+    <h2>🗣️ Stage 3: Daily Phrases</h2>
+    <button onclick="learn('これはすしです', 'kore wa sushi desu', 'This is sushi')">This is sushi</button>
+    <button onclick="learn('おちゃをください', 'ocha wo kudasai', 'Please give me tea')">Please give me tea</button>
+    <p id="result3"></p>
+    <button onclick="goHome()">🔙 Back</button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz" class="section">
+    <h2>📝 Stage 4: Quiz</h2>
+    <p>Coming soon! You're not ready yet 😄</p>
+    <button onclick="goHome()">🔙 Back</button>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+      document.getElementById('home').classList.remove('visible');
+      document.getElementById(id).classList.add('visible');
+    }
+
+    function goHome() {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+      document.getElementById('home').classList.add('visible');
+      clearResults();
+    }
+
+    function learn(jp, romaji, en) {
+      const result = `🈯 ${jp} (${romaji}) = ${en}`;
+      if (document.getElementById('stage1').classList.contains('visible')) {
+        document.getElementById('result1').innerText = result;
+      } else if (document.getElementById('stage2').classList.contains('visible')) {
+        document.getElementById('result2').innerText = result;
+      } else if (document.getElementById('stage3').classList.contains('visible')) {
+        document.getElementById('result3').innerText = result;
+      }
+    }
+
+    function clearResults() {
+      document.getElementById('result1').innerText = '';
+      document.getElementById('result2').innerText = '';
+      document.getElementById('result3').innerText = '';
+    }
+  </script>
 </body>
 </html>
