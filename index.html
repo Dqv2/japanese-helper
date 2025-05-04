@@ -74,13 +74,15 @@
       color: #999;
     }
 
-    /* Flashcard Flip Styles */
     .flashcard {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       perspective: 1000px;
-      cursor: pointer;
-      margin: 0 auto 20px;
-      width: 90%;
+      width: 100%;
       max-width: 300px;
+      margin: 0 auto;
+      min-height: 200px;
     }
 
     .card-inner {
@@ -109,7 +111,6 @@
       transform: rotateY(180deg);
     }
 
-    /* Bottom Task Bar */
     .taskbar {
       background: #1a1a1a;
       padding: 10px;
@@ -131,10 +132,18 @@
       border-right: none;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       .taskbar button {
-        font-size: 0.8em;
+        font-size: 0.75em;
         padding: 10px 5px;
+      }
+
+      .flashcard {
+        min-height: 160px;
+      }
+
+      .romaji, .en {
+        font-size: 1em;
       }
     }
   </style>
@@ -142,10 +151,9 @@
 <body>
 
   <div class="content">
-
     <h1>🈶 Japanese Helper</h1>
 
-    <!-- Home Screen -->
+    <!-- Home -->
     <div id="home" class="visible section">
       <button onclick="showSection('stage1')">🍣 Stage 1: Words</button>
       <button onclick="showSection('stage2')">🙋 Stage 2: Greetings</button>
@@ -175,26 +183,29 @@
       <div class="word-box"><div class="jp">おちゃ を ください</div><div class="romaji">O cha o ku da sa i</div><div class="en">Please give me tea</div></div>
     </div>
 
-   <!-- Flashcards -->
-<div id="flashcards" class="section">
-    <h2>🧠 Flashcards</h2>
-    <div class="flashcard card" onclick="flipCard()">
-      <div class="card-inner" id="cardInner">
-        <div class="card-front">
-          <div class="jp" id="flashJP">?</div>
-        </div>
-        <div class="card-back">
-          <div class="romaji" id="flashRomaji">Romaji</div>
-          <div class="en" id="flashEN">Meaning</div>
+    <!-- Flashcards -->
+    <div id="flashcards" class="section">
+      <h2>🧠 Flashcards</h2>
+      <div class="flashcard card" onclick="flipCard()" style="margin-bottom: 16px;">
+        <div class="card-inner" id="cardInner">
+          <div class="card-front">
+            <div class="jp" id="flashJP">?</div>
+          </div>
+          <div class="card-back">
+            <div class="romaji" id="flashRomaji">Romaji</div>
+            <div class="en" id="flashEN">Meaning</div>
+          </div>
         </div>
       </div>
-    </div>
-  
-    <!-- Move this here -->
-    <button onclick="nextCard()">Next</button>
-  </div>  
 
-  <!-- Taskbar -->
+      <!-- Centered Next button -->
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="nextCard()" style="background-color: #1f6feb; padding: 12px 24px; font-size: 1.1em;">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Taskbar -->
   <div class="taskbar">
     <button onclick="showSection('home')">🏠 Home</button>
     <button onclick="showSection('stage1')">🍣 Words</button>
@@ -213,9 +224,9 @@
       { jp: "これは すし です", romaji: "Ko re wa su shi de su", en: "This is sushi" },
       { jp: "おちゃ を ください", romaji: "O cha o ku da sa i", en: "Please give me tea" }
     ];
-  
+
     let current = 0;
-  
+
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => {
         s.classList.remove('visible');
@@ -228,7 +239,7 @@
       }, 300);
       document.querySelector('.card')?.classList.remove('flipped');
     }
-  
+
     function nextCard() {
       const c = cards[current];
       document.getElementById('flashJP').innerText = c.jp;
@@ -237,22 +248,22 @@
       current = (current + 1) % cards.length;
       document.querySelector('.card')?.classList.remove('flipped');
     }
-  
+
     function flipCard() {
       document.querySelector('.card')?.classList.toggle('flipped');
       const text = document.getElementById('flashJP').innerText;
       speakJapanese(text);
     }
-  
+
     function speakJapanese(text) {
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'ja-JP';
       speechSynthesis.speak(utter);
     }
-  
-    // Load first flashcard
+
     document.getElementById('flashcards').addEventListener('click', () => {
       if (document.getElementById('flashJP').innerText === "?") nextCard();
     });
   </script>
-  
+</body>
+</html>
