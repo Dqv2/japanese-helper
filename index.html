@@ -5,21 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
   <style>
-    :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --text-color: #f0f0f0;
-      --accent-color: #4CAF50;
-    }
-
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: #121212;
+      color: #f1f1f1;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      transition: background-color 0.4s, color 0.4s;
     }
 
     h1, h2 {
@@ -29,14 +23,13 @@
     .content {
       flex: 1;
       padding: 20px;
-      transition: all 0.4s ease-in-out;
     }
 
     button {
       font-size: 1.1em;
       padding: 10px 16px;
       margin: 8px;
-      background-color: var(--accent-color);
+      background-color: #1f6feb;
       color: white;
       border: none;
       border-radius: 6px;
@@ -45,26 +38,24 @@
 
     .section {
       display: none;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
-      background-color: var(--card-bg);
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
     }
 
     .visible {
       display: block;
+      opacity: 1;
     }
 
     .word-box {
-      background-color: var(--card-bg);
+      background-color: #1e1e1e;
       padding: 20px;
       margin: 20px auto;
       width: 90%;
       max-width: 400px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
       border: 1px solid #333;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
     }
 
     .jp {
@@ -74,20 +65,21 @@
 
     .romaji {
       font-size: 1.2em;
-      color: #aaa;
+      color: #bbbbbb;
       margin-bottom: 10px;
     }
 
     .en {
       font-size: 1em;
-      color: #ccc;
+      color: #999;
     }
 
+    /* Flashcard Flip Styles */
     .flashcard {
       perspective: 1000px;
       cursor: pointer;
       margin: 0 auto 20px;
-      width: 100%;
+      width: 90%;
       max-width: 300px;
     }
 
@@ -106,80 +98,154 @@
       position: absolute;
       width: 100%;
       backface-visibility: hidden;
-      background: var(--card-bg);
+      background: #1e1e1e;
       border-radius: 10px;
       padding: 20px;
       border: 1px solid #333;
-      color: var(--text-color);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
     }
 
     .card-back {
       transform: rotateY(180deg);
     }
 
+    /* Bottom Task Bar */
     .taskbar {
-      background: #1e1e1e;
+      background: #1a1a1a;
       padding: 10px;
       display: flex;
-      justify-content: space-around;
-      border-top: 1px solid #444;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      border-top: 1px solid #333;
     }
 
     .taskbar button {
-      background: transparent;
-      color: var(--accent-color);
+      flex: 1;
       font-size: 0.9em;
-      border: none;
-      margin: 5px;
+      padding: 12px;
+      border-right: 1px solid #333;
+      background-color: #1a1a1a;
+      color: #1f6feb;
     }
 
-    .profile {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
+    .taskbar button:last-child {
+      border-right: none;
     }
 
-    .profile img {
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      margin-right: 10px;
+    @media (max-width: 500px) {
+      .taskbar button {
+        font-size: 0.8em;
+        padding: 10px 5px;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="content">
-    <div class="profile">
-      <img src="https://via.placeholder.com/60" alt="Profile Picture">
-      <span>Hello, Learner!</span>
-    </div>
 
     <h1>🈶 Japanese Helper</h1>
 
-    <!-- Sections go here (home, stages, flashcards, etc.) -->
+    <!-- Home Screen -->
+    <div id="home" class="visible section">
+      <button onclick="showSection('stage1')">🍣 Stage 1: Words</button>
+      <button onclick="showSection('stage2')">🙋 Stage 2: Greetings</button>
+      <button onclick="showSection('stage3')">🗣️ Stage 3: Phrases</button>
+      <button onclick="showSection('flashcards')">🧠 Flashcards</button>
+    </div>
+
+    <!-- Stage 1 -->
+    <div id="stage1" class="section">
+      <h2>🍣 Basic Words</h2>
+      <div class="word-box"><div class="jp">お茶</div><div class="romaji">O cha</div><div class="en">Tea</div></div>
+      <div class="word-box"><div class="jp">すし</div><div class="romaji">Su shi</div><div class="en">Sushi</div></div>
+      <div class="word-box"><div class="jp">です</div><div class="romaji">De su</div><div class="en">Is / It is</div></div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div id="stage2" class="section">
+      <h2>🙋 Greetings</h2>
+      <div class="word-box"><div class="jp">こんにちは</div><div class="romaji">Ko n ni chi wa</div><div class="en">Hello</div></div>
+      <div class="word-box"><div class="jp">さようなら</div><div class="romaji">Sa yo u na ra</div><div class="en">Goodbye</div></div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div id="stage3" class="section">
+      <h2>🗣️ Daily Phrases</h2>
+      <div class="word-box"><div class="jp">これは すし です</div><div class="romaji">Ko re wa su shi de su</div><div class="en">This is sushi</div></div>
+      <div class="word-box"><div class="jp">おちゃ を ください</div><div class="romaji">O cha o ku da sa i</div><div class="en">Please give me tea</div></div>
+    </div>
+
+    <!-- Flashcards -->
+    <div id="flashcards" class="section">
+      <h2>🧠 Flashcards</h2>
+      <div class="flashcard card" onclick="flipCard()">
+        <div class="card-inner" id="cardInner">
+          <div class="card-front">
+            <div class="jp" id="flashJP">?</div>
+          </div>
+          <div class="card-back">
+            <div class="romaji" id="flashRomaji">Romaji</div>
+            <div class="en" id="flashEN">Meaning</div>
+          </div>
+        </div>
+      </div>
+      <button onclick="nextCard()">Next</button>
+    </div>
+
   </div>
 
+  <!-- Taskbar -->
   <div class="taskbar">
     <button onclick="showSection('home')">🏠 Home</button>
     <button onclick="showSection('stage1')">🍣 Words</button>
     <button onclick="showSection('stage2')">🙋 Greet</button>
     <button onclick="showSection('stage3')">🗣️ Phrases</button>
-    <button onclick="showSection('flashcards')">🧠 Flashcards</button>
+    <button onclick="showSection('flashcards')">🧠 Cards</button>
   </div>
 
   <script>
+    const cards = [
+      { jp: "お茶", romaji: "O cha", en: "Tea" },
+      { jp: "すし", romaji: "Su shi", en: "Sushi" },
+      { jp: "です", romaji: "De su", en: "Is / It is" },
+      { jp: "こんにちは", romaji: "Ko n ni chi wa", en: "Hello" },
+      { jp: "さようなら", romaji: "Sa yo u na ra", en: "Goodbye" },
+      { jp: "これは すし です", romaji: "Ko re wa su shi de su", en: "This is sushi" },
+      { jp: "おちゃ を ください", romaji: "O cha o ku da sa i", en: "Please give me tea" }
+    ];
+
+    let current = 0;
+
     function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
-      document.getElementById(id)?.classList.add('visible');
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
+      document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('visible');
+        setTimeout(() => s.style.display = 'none', 300);
+      });
+      const target = document.getElementById(id);
+      setTimeout(() => {
+        target.style.display = 'block';
+        setTimeout(() => target.classList.add('visible'), 10);
+      }, 300);
+      document.querySelector('.card')?.classList.remove('flipped');
+    }
+
+    function nextCard() {
+      const c = cards[current];
+      document.getElementById('flashJP').innerText = c.jp;
+      document.getElementById('flashRomaji').innerText = c.romaji;
+      document.getElementById('flashEN').innerText = c.en;
+      current = (current + 1) % cards.length;
+      document.querySelector('.card')?.classList.remove('flipped');
     }
 
     function flipCard() {
-      document.querySelector('.card').classList.toggle('flipped');
+      document.querySelector('.card')?.classList.toggle('flipped');
     }
+
+    // Load first flashcard
+    document.getElementById('flashcards').addEventListener('click', () => {
+      if (document.getElementById('flashJP').innerText === "?") nextCard();
+    });
   </script>
 </body>
 </html>
