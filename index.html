@@ -6,145 +6,192 @@
   <link rel="manifest" href="manifest.json">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    h1, h2 {
       text-align: center;
-      margin: 30px;
-      background-color: #f2f2f2;
     }
-    h1 {
-      margin-bottom: 10px;
+
+    .content {
+      flex: 1;
+      padding: 20px;
     }
-    h2 {
-      margin-top: 40px;
-    }
+
     button {
-      font-size: 1.2em;
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
+      font-size: 1.1em;
+      padding: 10px 16px;
+      margin: 8px;
       background-color: #4CAF50;
       color: white;
+      border: none;
       border-radius: 6px;
+      cursor: pointer;
     }
+
     .section {
       display: none;
     }
+
     .visible {
       display: block;
     }
+
     .word-box {
       background-color: white;
       padding: 20px;
       margin: 20px auto;
-      width: 80%;
+      width: 90%;
+      max-width: 400px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+
     .jp {
       font-size: 2em;
       margin-bottom: 5px;
     }
+
     .romaji {
       font-size: 1.2em;
       color: #555;
       margin-bottom: 10px;
     }
+
     .en {
       font-size: 1em;
       color: #888;
     }
+
+    /* Flashcard Flip Styles */
+    .flashcard {
+      perspective: 1000px;
+      cursor: pointer;
+      margin: 0 auto 20px;
+      width: 90%;
+      max-width: 300px;
+    }
+
+    .card-inner {
+      width: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Bottom Task Bar */
+    .taskbar {
+      background: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ccc;
+    }
+
+    .taskbar button {
+      background-color: #ffffff;
+      color: #4CAF50;
+      font-size: 0.9em;
+      border: none;
+    }
   </style>
 </head>
 <body>
-  <h1>🈶 Japanese Helper</h1>
 
-  <!-- Home Screen -->
-  <div id="home" class="visible">
-    <p>Start your journey here:</p>
-    <button onclick="showSection('stage1')">🍣 Stage 1: Basic Words</button>
-    <button onclick="showSection('stage2')">🙋 Stage 2: Greetings</button>
-    <button onclick="showSection('stage3')">🗣️ Stage 3: Phrases</button>
+  <div class="content">
+
+    <h1>🈶 Japanese Helper</h1>
+
+    <!-- Home Screen -->
+    <div id="home" class="visible section">
+      <p>Start your journey here:</p>
+      <button onclick="showSection('stage1')">🍣 Stage 1: Basic Words</button>
+      <button onclick="showSection('stage2')">🙋 Stage 2: Greetings</button>
+      <button onclick="showSection('stage3')">🗣️ Stage 3: Phrases</button>
+      <button onclick="showSection('flashcards')">🧠 Flashcards</button>
+    </div>
+
+    <!-- Stage 1 -->
+    <div id="stage1" class="section">
+      <h2>🍣 Basic Words</h2>
+      <div class="word-box"><div class="jp">お茶</div><div class="romaji">O cha</div><div class="en">Tea</div></div>
+      <div class="word-box"><div class="jp">すし</div><div class="romaji">Su shi</div><div class="en">Sushi</div></div>
+      <div class="word-box"><div class="jp">です</div><div class="romaji">De su</div><div class="en">Is / It is</div></div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div id="stage2" class="section">
+      <h2>🙋 Greetings</h2>
+      <div class="word-box"><div class="jp">こんにちは</div><div class="romaji">Ko n ni chi wa</div><div class="en">Hello</div></div>
+      <div class="word-box"><div class="jp">さようなら</div><div class="romaji">Sa yo u na ra</div><div class="en">Goodbye</div></div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div id="stage3" class="section">
+      <h2>🗣️ Daily Phrases</h2>
+      <div class="word-box"><div class="jp">これはすしです</div><div class="romaji">Ko re wa su shi de su</div><div class="en">This is sushi</div></div>
+      <div class="word-box"><div class="jp">おちゃをください</div><div class="romaji">O cha o ku da sa i</div><div class="en">Please give me tea</div></div>
+    </div>
+
+    <!-- Flashcards -->
+    <div id="flashcards" class="section">
+      <h2>🧠 Flashcards</h2>
+      <div class="flashcard card" onclick="flipCard()">
+        <div class="card-inner" id="cardInner">
+          <div class="card-front">
+            <div class="jp" id="flashJP">?</div>
+          </div>
+          <div class="card-back">
+            <div class="romaji" id="flashRomaji"></div>
+            <div class="en" id="flashEN"></div>
+          </div>
+        </div>
+      </div>
+      <button onclick="nextCard()">Next</button>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="taskbar">
+    <button onclick="showSection('home')">🏠 Home</button>
+    <button onclick="showSection('stage1')">🍣 Words</button>
+    <button onclick="showSection('stage2')">🙋 Greet</button>
+    <button onclick="showSection('stage3')">🗣️ Phrases</button>
     <button onclick="showSection('flashcards')">🧠 Flashcards</button>
-  </div>
-
-  <!-- Stage 1: Basic Words -->
-  <div id="stage1" class="section">
-    <h2>🍣 Basic Words</h2>
-    <div class="word-box">
-      <div class="jp">お茶</div>
-      <div class="romaji">O cha</div>
-      <div class="en">Tea</div>
-    </div>
-    <div class="word-box">
-      <div class="jp">すし</div>
-      <div class="romaji">Su shi</div>
-      <div class="en">Sushi</div>
-    </div>
-    <div class="word-box">
-      <div class="jp">です</div>
-      <div class="romaji">De su</div>
-      <div class="en">Is / It is</div>
-    </div>
-    <button onclick="goHome()">🔙 Back</button>
-  </div>
-
-  <!-- Stage 2: Greetings -->
-  <div id="stage2" class="section">
-    <h2>🙋 Greetings</h2>
-    <div class="word-box">
-      <div class="jp">こんにちは</div>
-      <div class="romaji">Ko n ni chi wa</div>
-      <div class="en">Hello</div>
-    </div>
-    <div class="word-box">
-      <div class="jp">さようなら</div>
-      <div class="romaji">Sa yo u na ra</div>
-      <div class="en">Goodbye</div>
-    </div>
-    <button onclick="goHome()">🔙 Back</button>
-  </div>
-
-  <!-- Stage 3: Phrases -->
-  <div id="stage3" class="section">
-    <h2>🗣️ Daily Phrases</h2>
-    <div class="word-box">
-      <div class="jp">これはすしです</div>
-      <div class="romaji">Ko re wa su shi de su</div>
-      <div class="en">This is sushi</div>
-    </div>
-    <div class="word-box">
-      <div class="jp">おちゃをください</div>
-      <div class="romaji">O cha o ku da sa i</div>
-      <div class="en">Please give me tea</div>
-    </div>
-    <button onclick="goHome()">🔙 Back</button>
-  </div>
-
-  <!-- Flashcards -->
-  <div id="flashcards" class="section">
-    <h2>🧠 Flashcards</h2>
-    <div class="word-box" id="cardBox">
-      <div class="jp" id="flashJP">?</div>
-      <div class="romaji" id="flashRomaji"></div>
-      <div class="en" id="flashEN"></div>
-    </div>
-    <button onclick="nextCard()">Next</button>
-    <button onclick="goHome()">🔙 Back</button>
   </div>
 
   <script>
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
-      document.getElementById('home').classList.remove('visible');
       document.getElementById(id).classList.add('visible');
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
     }
 
-    function goHome() {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
-      document.getElementById('home').classList.add('visible');
-    }
-
-    // Flashcard logic
+    // Flashcards
     const cards = [
       { jp: "お茶", romaji: "O cha", en: "Tea" },
       { jp: "すし", romaji: "Su shi", en: "Sushi" },
@@ -162,11 +209,18 @@
       document.getElementById('flashRomaji').innerText = c.romaji;
       document.getElementById('flashEN').innerText = c.en;
       current = (current + 1) % cards.length;
+      document.querySelector('.card').classList.remove('flipped');
     }
 
-    // Show first card when entering flashcard mode
-    document.getElementById('flashcards').addEventListener('click', function () {
-      if (current === 0) nextCard();
+    function flipCard() {
+      document.querySelector('.card').classList.toggle('flipped');
+    }
+
+    // Load first card when entering flashcards
+    document.getElementById('flashcards').addEventListener('click', () => {
+      if (document.getElementById('flashJP').innerText === "?") {
+        nextCard();
+      }
     });
   </script>
 </body>
