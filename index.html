@@ -8,18 +8,50 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin: 40px;
+      margin: 30px;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin-top: 40px;
     }
     button {
       font-size: 1.2em;
       padding: 10px 20px;
       margin: 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 6px;
     }
     .section {
       display: none;
     }
     .visible {
       display: block;
+    }
+    .word-box {
+      background-color: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .jp {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    .romaji {
+      font-size: 1.2em;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .en {
+      font-size: 1em;
+      color: #888;
     }
   </style>
 </head>
@@ -28,46 +60,75 @@
 
   <!-- Home Screen -->
   <div id="home" class="visible">
-    <p>Choose your learning stage:</p>
-    <button onclick="showSection('stage1')">Stage 1: Basic Words</button>
-    <button onclick="showSection('stage2')">Stage 2: Greetings</button>
-    <button onclick="showSection('stage3')">Stage 3: Daily Phrases</button>
-    <button onclick="showSection('quiz')">Stage 4: Quiz Me!</button>
+    <p>Start your journey here:</p>
+    <button onclick="showSection('stage1')">🍣 Stage 1: Basic Words</button>
+    <button onclick="showSection('stage2')">🙋 Stage 2: Greetings</button>
+    <button onclick="showSection('stage3')">🗣️ Stage 3: Phrases</button>
+    <button onclick="showSection('flashcards')">🧠 Flashcards</button>
   </div>
 
   <!-- Stage 1: Basic Words -->
   <div id="stage1" class="section">
-    <h2>🍣 Stage 1: Basic Words</h2>
-    <p>Click a button to learn a word:</p>
-    <button onclick="learn('お茶', 'ocha', 'Tea')">Tea (お茶)</button>
-    <button onclick="learn('すし', 'sushi', 'Sushi')">Sushi (すし)</button>
-    <button onclick="learn('です', 'desu', 'is / it is')">Desu (です)</button>
-    <p id="result1"></p>
+    <h2>🍣 Basic Words</h2>
+    <div class="word-box">
+      <div class="jp">お茶</div>
+      <div class="romaji">O cha</div>
+      <div class="en">Tea</div>
+    </div>
+    <div class="word-box">
+      <div class="jp">すし</div>
+      <div class="romaji">Su shi</div>
+      <div class="en">Sushi</div>
+    </div>
+    <div class="word-box">
+      <div class="jp">です</div>
+      <div class="romaji">De su</div>
+      <div class="en">Is / It is</div>
+    </div>
     <button onclick="goHome()">🔙 Back</button>
   </div>
 
   <!-- Stage 2: Greetings -->
   <div id="stage2" class="section">
-    <h2>🙋 Stage 2: Greetings</h2>
-    <button onclick="learn('こんにちは', 'konnichiwa', 'Hello')">Hello (こんにちは)</button>
-    <button onclick="learn('さようなら', 'sayounara', 'Goodbye')">Goodbye (さようなら)</button>
-    <p id="result2"></p>
+    <h2>🙋 Greetings</h2>
+    <div class="word-box">
+      <div class="jp">こんにちは</div>
+      <div class="romaji">Ko n ni chi wa</div>
+      <div class="en">Hello</div>
+    </div>
+    <div class="word-box">
+      <div class="jp">さようなら</div>
+      <div class="romaji">Sa yo u na ra</div>
+      <div class="en">Goodbye</div>
+    </div>
     <button onclick="goHome()">🔙 Back</button>
   </div>
 
-  <!-- Stage 3: Daily Phrases -->
+  <!-- Stage 3: Phrases -->
   <div id="stage3" class="section">
-    <h2>🗣️ Stage 3: Daily Phrases</h2>
-    <button onclick="learn('これはすしです', 'kore wa sushi desu', 'This is sushi')">This is sushi</button>
-    <button onclick="learn('おちゃをください', 'ocha wo kudasai', 'Please give me tea')">Please give me tea</button>
-    <p id="result3"></p>
+    <h2>🗣️ Daily Phrases</h2>
+    <div class="word-box">
+      <div class="jp">これはすしです</div>
+      <div class="romaji">Ko re wa su shi de su</div>
+      <div class="en">This is sushi</div>
+    </div>
+    <div class="word-box">
+      <div class="jp">おちゃをください</div>
+      <div class="romaji">O cha o ku da sa i</div>
+      <div class="en">Please give me tea</div>
+    </div>
     <button onclick="goHome()">🔙 Back</button>
   </div>
 
-  <!-- Quiz -->
-  <div id="quiz" class="section">
-    <h2>📝 Stage 4: Quiz</h2>
-    <p>Coming soon! You're not ready yet 😄</p>
+  <!-- Flashcards -->
+  <div id="flashcards" class="section">
+    <h2>🧠 Flashcards</h2>
+    <div class="word-box" id="cardBox">
+      <div class="jp" id="flashJP">?</div>
+      <div class="romaji" id="flashRomaji"></div>
+      <div class="en" id="flashEN"></div>
+    </div>
+    <button onclick="nextCard()">Next</button>
     <button onclick="goHome()">🔙 Back</button>
   </div>
 
@@ -81,25 +142,32 @@
     function goHome() {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
       document.getElementById('home').classList.add('visible');
-      clearResults();
     }
 
-    function learn(jp, romaji, en) {
-      const result = `🈯 ${jp} (${romaji}) = ${en}`;
-      if (document.getElementById('stage1').classList.contains('visible')) {
-        document.getElementById('result1').innerText = result;
-      } else if (document.getElementById('stage2').classList.contains('visible')) {
-        document.getElementById('result2').innerText = result;
-      } else if (document.getElementById('stage3').classList.contains('visible')) {
-        document.getElementById('result3').innerText = result;
-      }
+    // Flashcard logic
+    const cards = [
+      { jp: "お茶", romaji: "O cha", en: "Tea" },
+      { jp: "すし", romaji: "Su shi", en: "Sushi" },
+      { jp: "です", romaji: "De su", en: "Is / It is" },
+      { jp: "こんにちは", romaji: "Ko n ni chi wa", en: "Hello" },
+      { jp: "さようなら", romaji: "Sa yo u na ra", en: "Goodbye" },
+      { jp: "これはすしです", romaji: "Ko re wa su shi de su", en: "This is sushi" },
+      { jp: "おちゃをください", romaji: "O cha o ku da sa i", en: "Please give me tea" }
+    ];
+    let current = 0;
+
+    function nextCard() {
+      const c = cards[current];
+      document.getElementById('flashJP').innerText = c.jp;
+      document.getElementById('flashRomaji').innerText = c.romaji;
+      document.getElementById('flashEN').innerText = c.en;
+      current = (current + 1) % cards.length;
     }
 
-    function clearResults() {
-      document.getElementById('result1').innerText = '';
-      document.getElementById('result2').innerText = '';
-      document.getElementById('result3').innerText = '';
-    }
+    // Show first card when entering flashcard mode
+    document.getElementById('flashcards').addEventListener('click', function () {
+      if (current === 0) nextCard();
+    });
   </script>
 </body>
 </html>
